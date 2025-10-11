@@ -35,16 +35,16 @@ export function ProductCardList({ rows, keys }: { rows: Row[]; keys: CardFieldKe
             onClick={() => handleCardClick(sku)}
           >
             <div className="aspect-[4/3] relative bg-gray-100">
-              {imageUrl ? (
-                <Image
-                  src={imageUrl}
-                  alt={title || "image"}
-                  fill
-                  className="object-cover"
-                  priority={i < 4}  // 最初の4枚の画像に優先読み込みを設定
-                  unoptimized   // まずは簡単に。最適化する場合は next.config.mjs を設定して外す
-                />
-              ) : (
+                  {imageUrl ? (
+                    <Image
+                      src={imageUrl}
+                      alt={title || "image"}
+                      fill
+                      className="object-cover"
+                      priority={i < 4}  // 最初の4枚の画像に優先読み込みを設定
+                      unoptimized   // まずは簡単に。最適化する場合は next.config.mjs を設定して外す
+                    />
+                  ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
                   No Image
                 </div>
