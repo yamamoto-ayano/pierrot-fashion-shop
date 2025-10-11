@@ -1,4 +1,4 @@
-// src/app/page.tsx
+// src/app/category/[category]/page.tsx
 "use client"
 
 import useSWR from "swr"
@@ -14,7 +14,7 @@ import type { Row, SortDirection } from "@/lib/types"
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 // ===== ユーティリティ =====
-const PAGE_SIZE = 10
+const PAGE_SIZE = 20
 
 // ===== サブUI：表 =====
 function ProductTable({
@@ -22,7 +22,12 @@ function ProductTable({
   headers,
   isLoading,
   error,
-}: { rows: Row[]; headers: string[]; isLoading: boolean; error?: Error }) {
+}: {
+  rows: Row[];
+  headers: string[];
+  isLoading: boolean;
+  error?: Error;
+}) {
   return (
     <div className="overflow-x-auto rounded-xl border shadow-sm">
       <table className="min-w-full text-sm">
@@ -45,9 +50,13 @@ function ProductTable({
           )}
           {rows.map((r, i) => (
             <tr key={i} className="odd:bg-white even:bg-gray-50">
-              {headers.map((h) => (
-                <td key={h} className="px-4 py-2">{r[h] ?? ""}</td>
-              ))}
+              {headers.map((h) => {
+                const value = r[h] ?? ""
+                const displayValue = value
+                return (
+                  <td key={h} className="px-4 py-2">{displayValue}</td>
+                )
+              })}
             </tr>
           ))}
         </tbody>
@@ -56,10 +65,11 @@ function ProductTable({
   )
 }
 
-
 // ===== ページ本体 =====
-export default function Page() {
+export default function CategoryPage({ params }: { params: { category: string } }) {
   const router = useRouter()
+  const categoryName = decodeURIComponent(params.category)
+
   const { data, error, isLoading } = useSWR<{ data: Row[] }>("/api/products", fetcher, {
     refreshInterval: 120_000,   // 2分ごと再取得
     revalidateOnFocus: false,
@@ -97,20 +107,15 @@ export default function Page() {
     findBy(["description", "desc", "説明", "詳細"]) ||
     headers.find((h) => h !== titleKey && h !== priceKey && h !== imageKey)
 
-  // カテゴリ候補
-  const categoryOptions = useMemo(() => {
-    if (!categoryKey) return []
-    const set = new Set<string>()
-    rows.forEach((r) => {
-      const v = (r[categoryKey] ?? "").toString().trim()
-      if (v) set.add(v)
-    })
-    return Array.from(set).sort((a, b) => a.localeCompare(b, "ja"))
-  }, [rows, categoryKey])
+  // カテゴリで絞り込み
+  const categoryFiltered = useMemo(() => {
+    if (!categoryKey) return rows
+    return rows.filter((r) => (r[categoryKey] ?? "").toString() === categoryName)
+  }, [rows, categoryKey, categoryName])
 
   // 絞り込み・検索・ソート・ページング
   const filtered = useMemo(() => {
-    let arr = rows
+    let arr = categoryFiltered
 
     const kw = q.trim().toLowerCase()
     if (kw) {
@@ -131,7 +136,7 @@ export default function Page() {
     }
 
     return arr
-  }, [rows, q, sortKey, sortDir])
+  }, [categoryFiltered, q, sortKey, sortDir])
 
   const total = filtered.length
   const maxPage = Math.max(1, Math.ceil(total / PAGE_SIZE))
@@ -139,37 +144,27 @@ export default function Page() {
 
   const hasImage = Boolean(imageKey)
 
-  // カテゴリーボタンのクリック処理
-  const handleCategoryClick = (category: string) => {
-    router.push(`/category/${encodeURIComponent(category)}`)
-  }
-
   return (
     <main className="min-h-dvh p-6 space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-bold" style={{ color: "#947962" }}>Pierrot — 商品一覧</h1>
-        <p className="text-sm text-gray-600">公開シートの更新は最長2分で反映されます。</p>
-      </header>
-
-      {/* カテゴリーボタン */}
-      {categoryOptions.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold" style={{ color: "#947962" }}>カテゴリー</h2>
-          <div className="flex flex-wrap gap-2">
-            {categoryOptions.map((category) => (
-              <Button
-                key={category}
-                variant="outline"
-                onClick={() => handleCategoryClick(category)}
-                className="rounded-full border-2 hover:bg-[#F8E8E4] hover:border-[#947962] transition-colors"
-                style={{ borderColor: "#947962", color: "#947962" }}
-              >
-                {category}
-              </Button>
-            ))}
+        <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/")}
+            className="rounded-full"
+          >
+            ← 戻る
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold" style={{ color: "#947962" }}>
+              {categoryName} — 商品一覧
+            </h1>
+            <p className="text-sm text-gray-600">
+              {total}件の商品が見つかりました
+            </p>
           </div>
         </div>
-      )}
+      </header>
 
       {/* コントロール */}
       <div className="flex flex-wrap gap-3 items-center">
