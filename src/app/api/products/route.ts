@@ -1,6 +1,7 @@
 // src/app/api/products/route.ts
 import { NextResponse } from "next/server"
 import Papa from "papaparse"
+import type { Row } from "@/lib/types"
 
 // Vercel/Nextのサーバー実行（Node.js）
 export const runtime = "nodejs"
@@ -11,8 +12,6 @@ export const revalidate = 120
 // 例：公開シートのCSVエンドポイント（必要に応じて差し替え）
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/1DNnfYYCY-hGNpTxq6ljk2-zE-S-w5OAY19lphcSNlJo/export?format=csv&gid=0"
-
-type Row = Record<string, string>
 
 // 必要に応じて列名の正規化をここで行う
 function normalize(rows: Row[]) {
