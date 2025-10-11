@@ -1,12 +1,19 @@
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { asImageUrl } from "@/lib/drive"
 import { formatPrice } from "@/lib/utils"
 import type { Row, CardFieldKeys } from "@/lib/types"
 
 export function ProductCardList({ rows, keys }: { rows: Row[]; keys: CardFieldKeys }) {
+  const router = useRouter()
   const { titleKey, priceKey, categoryKey, imageKey, descriptionKey } = keys
 
   if (!rows.length) return <p className="px-4 py-4 text-gray-500">条件に合致する商品がありません。</p>
+
+  // 商品カードのクリック処理
+  const handleCardClick = (sku: string) => {
+    router.push(`/product/${sku}`)
+  }
 
   return (
     <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
@@ -15,13 +22,18 @@ export function ProductCardList({ rows, keys }: { rows: Row[]; keys: CardFieldKe
         const price = (priceKey && r[priceKey]) || ""
         const category = (categoryKey && r[categoryKey]) || ""
         const description = (descriptionKey && r[descriptionKey]) || ""
+        const sku = r.sku || ""
 
         // ここでID→URLに変換
         const rawImg = (imageKey && r[imageKey]) || ""
         const imageUrl = asImageUrl(rawImg)
 
         return (
-          <article key={i} className="rounded-2xl border bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+          <article 
+            key={i} 
+            className="rounded-2xl border bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => handleCardClick(sku)}
+          >
             <div className="aspect-[4/3] relative bg-gray-100">
               {imageUrl ? (
                 <Image
@@ -29,6 +41,7 @@ export function ProductCardList({ rows, keys }: { rows: Row[]; keys: CardFieldKe
                   alt={title || "image"}
                   fill
                   className="object-cover"
+                  priority={i < 4}  // 最初の4枚の画像に優先読み込みを設定
                   unoptimized   // まずは簡単に。最適化する場合は next.config.mjs を設定して外す
                 />
               ) : (
