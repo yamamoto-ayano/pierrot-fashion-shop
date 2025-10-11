@@ -22,7 +22,7 @@ function ProductTable({
   headers,
   isLoading,
   error,
-}: { rows: Row[]; headers: string[]; isLoading: boolean; error?: any }) {
+}: { rows: Row[]; headers: string[]; isLoading: boolean; error?: Error }) {
   return (
     <div className="overflow-x-auto rounded-xl border shadow-sm">
       <table className="min-w-full text-sm">
@@ -65,8 +65,8 @@ export default function Page() {
     revalidateOnFocus: false,
   })
 
-  const rows = data?.data ?? []
-  const headers = rows[0] ? Object.keys(rows[0]) : []
+  const rows = useMemo(() => data?.data ?? [], [data?.data])
+  const headers = useMemo(() => rows[0] ? Object.keys(rows[0]) : [], [rows])
 
   // 画面状態
   const [q, setQ] = useState("")

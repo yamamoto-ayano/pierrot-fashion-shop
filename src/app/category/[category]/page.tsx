@@ -3,14 +3,13 @@
 
 import useSWR from "swr"
 import { useMemo, useState } from "react"
-import { useRouter, useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { ProductCardList } from "@/components/products/ProductCardList"
 import { isNumericColumn, toNumber } from "@/lib/utils"
 import type { Row, SortDirection } from "@/lib/types"
-import { ALL } from "@/lib/types"
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
@@ -23,13 +22,11 @@ function ProductTable({
   headers,
   isLoading,
   error,
-  categoryKey,
 }: {
   rows: Row[];
   headers: string[];
   isLoading: boolean;
-  error?: any;
-  categoryKey?: string;
+  error?: Error;
 }) {
   return (
     <div className="overflow-x-auto rounded-xl border shadow-sm">
@@ -69,18 +66,17 @@ function ProductTable({
 }
 
 // ===== ページ本体 =====
-export default function CategoryPage() {
+export default function CategoryPage({ params }: { params: { category: string } }) {
   const router = useRouter()
-  const params = useParams()
-  const categoryName = decodeURIComponent(params.category as string)
+  const categoryName = decodeURIComponent(params.category)
 
   const { data, error, isLoading } = useSWR<{ data: Row[] }>("/api/products", fetcher, {
     refreshInterval: 120_000,   // 2分ごと再取得
     revalidateOnFocus: false,
   })
 
-  const rows = data?.data ?? []
-  const headers = rows[0] ? Object.keys(rows[0]) : []
+  const rows = useMemo(() => data?.data ?? [], [data?.data])
+  const headers = useMemo(() => rows[0] ? Object.keys(rows[0]) : [], [rows])
 
   // 画面状態
   const [q, setQ] = useState("")
@@ -217,7 +213,7 @@ export default function CategoryPage() {
           }}
         />
       ) : (
-        <ProductTable rows={pageRows} headers={headers} isLoading={isLoading} error={error} categoryKey={categoryKey} />
+        <ProductTable rows={pageRows} headers={headers} isLoading={isLoading} error={error} />
       )}
 
       {/* ページネーション */}
