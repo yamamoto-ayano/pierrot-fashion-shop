@@ -1,3 +1,12 @@
+/**
+ * 責務: 商品一覧のカード形式表示コンポーネント
+ * - 商品データをカード形式で表示（グリッドレイアウト）
+ * - 画像の表示とフォールバック（No Image）
+ * - 商品カードのクリックで詳細ページへ遷移
+ * - 価格のフォーマット表示
+ * - カテゴリーのチップ表示
+ * - 画像の優先読み込み（最初の4枚）
+ */
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { asImageUrl } from "@/lib/drive"

@@ -1,4 +1,13 @@
 // src/app/api/products/route.ts
+/**
+ * 責務: 商品データAPIエンドポイント
+ * - Google Sheetsから商品データのCSVを取得
+ * - カテゴリーマッピング用のCSVを取得して変換
+ * - CSVデータをパースしてJSON形式に変換
+ * - データの正規化（カテゴリー名の変換、価格の数値化など）
+ * - ISR（2分キャッシュ）によるパフォーマンス最適化
+ * - エラーハンドリングとログ出力
+ */
 import { NextResponse } from "next/server"
 import Papa from "papaparse"
 import type { Row } from "@/lib/types"

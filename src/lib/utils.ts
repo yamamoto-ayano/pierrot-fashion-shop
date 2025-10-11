@@ -1,3 +1,10 @@
+/**
+ * 責務: 汎用的なユーティリティ関数の集約
+ * - CSSクラスの結合（cn関数）
+ * - 数値列の判定（isNumericColumn）
+ * - 文字列から数値への変換（toNumber）
+ * - 価格のフォーマット（formatPrice）
+ */
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import type { Row } from "./types"

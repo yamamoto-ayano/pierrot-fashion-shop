@@ -1,4 +1,12 @@
 // src/hooks/useProductData.ts
+/**
+ * 責務: 商品データの取得と初期処理を行うカスタムフック
+ * - SWRを使用した商品データの取得とキャッシュ管理
+ * - ヘッダー情報の抽出
+ * - 列の自動検出（画像・タイトル・価格・カテゴリー・説明）
+ * - カテゴリー候補の生成
+ * - エラー状態とローディング状態の管理
+ */
 import useSWR from "swr"
 import { useMemo } from "react"
 import type { Row } from "@/lib/types"

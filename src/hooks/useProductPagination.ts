@@ -1,4 +1,11 @@
 // src/hooks/useProductPagination.ts
+/**
+ * 責務: 商品一覧のページネーション機能を管理するカスタムフック
+ * - 現在のページ番号の状態管理
+ * - ページサイズに基づく表示データの計算
+ * - 総ページ数の計算
+ * - ページネーション用のデータのメモ化
+ */
 import { useState, useMemo } from "react"
 import type { Row } from "@/lib/types"
 

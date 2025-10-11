@@ -1,4 +1,12 @@
 // src/lib/filtering.ts
+/**
+ * 責務: 商品データのフィルタリングとソート機能
+ * - 検索クエリによるフィルタリング
+ * - カテゴリーによるフィルタリング
+ * - 数値・文字列によるソート
+ * - ランダムシャッフル機能
+ * - フィルタリング結果のメモ化
+ */
 import type { Row, SortDirection } from "./types"
 import { isNumericColumn, toNumber } from "./utils"
 

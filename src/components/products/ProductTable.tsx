@@ -1,4 +1,11 @@
 // src/components/products/ProductTable.tsx
+/**
+ * 責務: 商品一覧の表形式表示コンポーネント
+ * - 商品データを表形式で表示
+ * - 価格列の自動フォーマット（カンマ区切り）
+ * - ローディング状態とエラー状態の表示
+ * - レスポンシブ対応（横スクロール）
+ */
 import type { Row } from "@/lib/types"
 
 interface ProductTableProps {

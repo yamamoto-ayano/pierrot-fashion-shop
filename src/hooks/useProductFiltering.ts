@@ -1,4 +1,12 @@
 // src/hooks/useProductFiltering.ts
+/**
+ * 責務: 商品のフィルタリングとソート機能を管理するカスタムフック
+ * - 検索クエリの状態管理
+ * - カテゴリーフィルタの状態管理
+ * - ソートキーとソート方向の状態管理
+ * - フィルタリング・ソート・ランダムシャッフルの適用
+ * - フィルタリング結果のメモ化
+ */
 import { useMemo, useState } from "react"
 import type { Row, SortDirection } from "@/lib/types"
 import { filterAndSortProducts, type FilterOptions } from "@/lib/filtering"

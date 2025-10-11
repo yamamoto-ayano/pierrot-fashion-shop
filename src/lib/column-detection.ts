@@ -1,4 +1,12 @@
 // src/lib/column-detection.ts
+/**
+ * 責務: CSVデータの列を自動検出する機能
+ * - 画像列の検出（image_file_ids、image、img、画像など）
+ * - タイトル列の検出（title、name、商品名、品名など）
+ * - 価格列の検出（price、金額、価格、値段など）
+ * - カテゴリー列の検出（category、カテゴリ、typeなど）
+ * - 説明列の検出（description、desc、説明、詳細など）
+ */
 import type { Row } from "./types"
 
 export interface DetectedColumns {

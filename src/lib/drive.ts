@@ -1,3 +1,10 @@
+/**
+ * 責務: Google Drive関連のユーティリティ関数
+ * - DriveファイルIDの抽出（firstDriveId）
+ * - Drive画像URLの生成（driveImageUrl）
+ * - 画像URLの統一処理（asImageUrl）
+ * - 既存URLとDrive IDの判定と変換
+ */
 // DriveファイルID（カンマ区切りもOK）→ 表示URL（サムネ用は先頭IDを使用）
 export function firstDriveId(value: string) {
   if (!value) return ""

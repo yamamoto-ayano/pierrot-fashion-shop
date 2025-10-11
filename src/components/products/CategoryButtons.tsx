@@ -1,4 +1,11 @@
 // src/components/products/CategoryButtons.tsx
+/**
+ * 責務: カテゴリーボタン表示コンポーネント
+ * - 利用可能なカテゴリーのボタンを表示
+ * - カテゴリーボタンのクリックでカテゴリーページへ遷移
+ * - カテゴリーが空の場合は非表示
+ * - レスポンシブなボタンレイアウト
+ */
 import { Button } from "@/components/ui/button"
 
 interface CategoryButtonsProps {
