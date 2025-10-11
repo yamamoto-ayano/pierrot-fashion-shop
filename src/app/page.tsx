@@ -108,9 +108,27 @@ export default function Page() {
     return Array.from(set).sort((a, b) => a.localeCompare(b, "ja"))
   }, [rows, categoryKey])
 
+  // ランダムシャッフル関数
+  const shuffleArray = (array: Row[]) => {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
+  }
+
   // 絞り込み・検索・ソート・ページング
   const filtered = useMemo(() => {
     let arr = rows
+
+    // 検索やソートがない場合はランダムシャッフルを適用
+    const hasSearch = q.trim().length > 0
+    const hasSort = sortKey.length > 0
+    
+    if (!hasSearch && !hasSort) {
+      arr = shuffleArray(rows)
+    }
 
     const kw = q.trim().toLowerCase()
     if (kw) {
